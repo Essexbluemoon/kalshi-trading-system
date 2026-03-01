@@ -1,0 +1,18 @@
+season_type,subcat,timing,trades,win_rate,ev_per_ctr,mean_pnl,total_pnl,sharpe,low_sample
+All-Star / HR Derby,All-Star Game,in-game,2309,1.0,0.04678,19.7778,45666.94918,0.33422,False
+All-Star / HR Derby,HR Derby,in-game,5139,0.87352,-0.07819,-45.13037,-231924.9648,-0.09613,False
+All-Star / HR Derby,HR Derby,pre-game,3198,1.0,0.06779,26.17763,83716.06534,0.1113,False
+Playoffs / Series,Series,in-game,7150,0.99944,0.04703,19.32047,138141.35695,0.29327,False
+Playoffs / Series,Series,pre-game,519,0.97881,0.03077,6.42862,3336.45619,0.41857,False
+Regular Season,Games,in-game,274661,0.97116,0.01606,5.24469,1440512.70381,0.09485,False
+Regular Season,Games,pre-game,570,0.93684,-0.02045,3.6389,2074.17084,0.08124,False
+Regular Season,Spreads,in-game,2672,0.95696,-0.00783,-0.15098,-403.41827,-0.00356,False
+Regular Season,Spreads,pre-game,12,0.91667,-0.02349,-2.7255,-32.70605,-0.18315,True
+Regular Season,Totals,in-game,2596,0.96186,-0.00596,-0.26034,-675.83668,-0.00866,False
+Regular Season,Totals,pre-game,151,0.88079,-0.06631,1.08012,163.09747,0.05394,True
+Season Awards / Other,American League,in-game,1989,1.0,0.04785,18.91352,37618.99567,0.37714,False
+Season Awards / Other,American League,pre-game,8368,0.96941,0.01411,10.05166,84112.26751,0.09277,False
+Season Awards / Other,National League,in-game,338,1.0,0.03549,10.75387,3634.80779,0.29213,True
+Season Awards / Other,National League,pre-game,7646,0.99948,0.03827,14.25705,109009.41533,0.18831,False
+Season Awards / Other,Other MLB,in-game,1590,0.92516,-0.05488,-7.69475,-12234.64836,-0.05407,False
+Season Awards / Other,Other MLB,pre-game,30430,0.99681,0.04729,18.31737,557397.59446,0.22168,False

@@ -1,0 +1,32 @@
+tier,subcat,timing,trades,win_rate,ev_per_ctr,mean_pnl,total_pnl,sharpe,low_sample
+ATP Tour,ATP Doubles,in-game,678,0.9705,0.00457,4.19054,2841.18528,0.08686,False
+ATP Tour,ATP Doubles,pre-game,4,0.75,-0.23526,0.31017,1.24069,0.31585,True
+ATP Tour,ATP Finals,in-game,14,1.0,0.0309,6.70147,93.82057,0.51598,True
+ATP Tour,ATP Finals,pre-game,1373,1.0,0.02728,6.38068,8760.6719,0.34161,False
+ATP Tour,ATP Italy,in-game,844,0.99882,0.03663,6.39262,5395.37229,0.44755,False
+ATP Tour,ATP Italy,pre-game,143,1.0,0.0626,6.02582,861.69197,0.78085,True
+ATP Tour,ATP Matches,in-game,170397,0.96028,0.00691,3.80774,648827.84881,0.03166,False
+ATP Tour,ATP Matches,pre-game,11243,0.93267,-0.01371,9.14864,102858.20164,0.06532,False
+ATP Tour,Davis Cup,in-game,2984,0.97487,0.02775,0.7383,2203.07724,0.00672,False
+ATP Tour,Other ATP,in-game,574,0.96864,0.00344,1.6781,963.231,0.07977,False
+ATP Tour,Other ATP,pre-game,311,0.96785,0.00617,1.38446,430.56566,0.03094,True
+Grand Slam,French Open,in-game,6213,0.98358,0.02915,16.71119,103826.61391,0.24143,False
+Grand Slam,French Open,pre-game,1082,0.99168,0.04254,7.17989,7768.6416,0.20542,False
+Grand Slam,French Open M,in-game,1623,0.53913,-0.4175,-281.96327,-457626.38593,-0.25088,False
+Grand Slam,French Open M,pre-game,5716,1.0,0.0476,30.18516,172538.38469,0.25679,False
+Grand Slam,French Open W,in-game,1792,0.98493,0.02779,17.02578,30510.19252,0.25669,False
+Grand Slam,French Open W,pre-game,2261,0.99956,0.03685,16.63353,37608.40015,0.21254,False
+Grand Slam,US Open M,in-game,1797,1.0,0.0483,30.60773,55002.09888,0.3249,False
+Grand Slam,US Open M,pre-game,14724,1.0,0.04463,23.91357,352103.41217,0.25062,False
+Grand Slam,US Open W,in-game,1137,1.0,0.05375,35.79475,40698.6293,0.35588,False
+Grand Slam,US Open W,pre-game,7194,0.99986,0.04454,22.14901,159339.97675,0.21256,False
+Grand Slam,Wimbledon M,in-game,2073,1.0,0.05908,52.2146,108240.8572,0.28356,False
+Grand Slam,Wimbledon M,pre-game,10751,1.0,0.02975,20.17519,216903.42011,0.21909,False
+Grand Slam,Wimbledon W,in-game,904,1.0,0.04297,33.35023,30148.60358,0.32067,False
+Grand Slam,Wimbledon W,pre-game,6097,0.98655,0.0243,21.78715,132836.22832,0.10896,False
+WTA Tour,Other WTA,in-game,347,0.9683,0.00259,1.24322,431.3961,0.04353,True
+WTA Tour,Other WTA,pre-game,705,0.98582,0.02768,6.09724,4298.55454,0.17502,False
+WTA Tour,WTA Italy,in-game,393,0.9084,-0.05342,-9.68538,-3806.35498,-0.11837,True
+WTA Tour,WTA Italy,pre-game,135,0.73333,-0.23185,-15.22117,-2054.85806,-0.21099,True
+WTA Tour,WTA Matches,in-game,108458,0.9534,0.00013,1.82311,197730.49048,0.02029,False
+WTA Tour,WTA Matches,pre-game,6055,0.91561,-0.03644,0.18345,1110.77915,0.00173,False

@@ -1,0 +1,4 @@
+event_prefix,subcat,trades,win_rate,ev_per_ctr,mean_pnl,total_pnl,sharpe,low_sample
+KXNATHANDOGS,Nathan's Hot Dogs,2282,0.99474,0.05228,-11.67495,-26642.2409,-0.0095,False
+KXNATHANSHD,Nathan's Hot Dogs,14406,1.0,0.03566,11.59221,166997.39882,0.17806,False
+KXNCAAWBGAME,NCAA Women's BB,6426,0.98553,0.01997,3.62326,23283.09305,0.14985,False

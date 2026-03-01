@@ -1,14 +1,18 @@
 """
 models.py
 SQLAlchemy ORM models matching the database schema in spec Section 2.
-Implemented in Phase 2.
+Indexes required by spec:
+  - trades.filled_at
+  - trades.market_ticker  (also the FK, but explicit index for query perf)
+  - position_history.settled_at
+  - daily_performance.date  (already the PK — index is implicit)
 """
 from __future__ import annotations
 
 from datetime import datetime, timezone
 
 from sqlalchemy import (
-    Boolean, Column, Date, DateTime, Integer, Numeric,
+    Boolean, Column, Date, DateTime, Index, Integer,
     String, Text, ForeignKey, DECIMAL,
 )
 from sqlalchemy.orm import relationship
@@ -64,6 +68,11 @@ class Trade(Base):
 
     market = relationship("Market", back_populates="trades")
 
+    __table_args__ = (
+        Index("ix_trades_filled_at",    "filled_at"),
+        Index("ix_trades_market_ticker", "market_ticker"),
+    )
+
 
 # ── positions ──────────────────────────────────────────────────────────────────
 
@@ -104,6 +113,10 @@ class PositionHistory(Base):
     days_held       = Column(DECIMAL(6, 2))
 
     market = relationship("Market", back_populates="position_hist")
+
+    __table_args__ = (
+        Index("ix_position_history_settled_at", "settled_at"),
+    )
 
 
 # ── benchmarks ─────────────────────────────────────────────────────────────────
