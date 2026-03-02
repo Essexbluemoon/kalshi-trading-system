@@ -20,7 +20,7 @@ from decimal import Decimal
 from enum import Enum
 from itertools import groupby
 
-from sqlalchemy import select, func
+from sqlalchemy import Integer, cast, func, select
 
 logger = logging.getLogger(__name__)
 
@@ -79,7 +79,7 @@ def _check_benchmark_drift(db_session) -> list[Alert]:
             models.Market.event_prefix,
             models.Market.category,
             func.count(models.PositionHistory.id).label("total"),
-            func.sum(models.PositionHistory.won).label("wins"),
+            func.sum(cast(models.PositionHistory.won, Integer)).label("wins"),
         )
         .join(models.Market, models.PositionHistory.market_ticker == models.Market.ticker)
         .where(models.Market.event_prefix.isnot(None))
