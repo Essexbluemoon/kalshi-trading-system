@@ -43,7 +43,7 @@ export default function Layout() {
           ))}
         </nav>
         <div className="px-6 py-4 border-t border-gray-800 text-xs text-gray-600">
-          Phase 1 scaffold
+          Phase 5 — React dashboard
         </div>
       </aside>
 
