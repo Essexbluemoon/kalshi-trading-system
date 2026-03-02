@@ -3,18 +3,17 @@
 
 [build]
 builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
 
 # ── API service (primary web service) ─────────────────────────────────────────
 [deploy]
-startCommand = "uvicorn main:app --host 0.0.0.0 --port $PORT"
+startCommand = "sh -c 'cd /app/api && python /app/scripts/migrate.py && python /app/scripts/import_benchmarks.py /app/benchmarks && exec uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}'"
 healthcheckPath = "/health"
 healthcheckTimeout = 30
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 3
 
 # ── Service-specific overrides set in Railway dashboard ───────────────────────
-# DATABASE_URL        injected automatically by Railway PostgreSQL plugin
-# KALSHI_API_KEY      set manually in Railway Variables
-# KALSHI_API_SECRET   set manually in Railway Variables
-# API_KEY             set manually in Railway Variables
-# CORS_ORIGINS        set to your Railway-generated frontend URL
+# DATABASE_URL          injected automatically by Railway PostgreSQL plugin
+# API_KEY               set manually in Railway Variables
+# CORS_ORIGINS          set to your Railway-generated frontend URL

@@ -20,10 +20,11 @@ from sqlalchemy import select
 
 router = APIRouter(dependencies=[Depends(require_api_key)])
 
-# Path to benchmark CSVs (matches docker-compose.yml volume mount)
-_BENCHMARKS_DIR = Path("/benchmarks")
+# Path to benchmark CSVs — try new container layout first, then legacy, then local dev
+_BENCHMARKS_DIR = Path("/app/benchmarks")
 if not _BENCHMARKS_DIR.exists():
-    # Fallback for local dev (outside Docker)
+    _BENCHMARKS_DIR = Path("/benchmarks")   # legacy docker-compose volume mount
+if not _BENCHMARKS_DIR.exists():
     _BENCHMARKS_DIR = Path(__file__).parent.parent.parent / "benchmarks"
 
 

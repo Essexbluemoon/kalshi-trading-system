@@ -1,0 +1,18 @@
+# Railway deployment configuration for the Frontend service.
+# In Railway UI: set this service's root directory to /frontend
+# and use target = "prod" in the build settings.
+# https://docs.railway.app/reference/config-as-code
+
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+buildTarget = "prod"
+
+[deploy]
+healthcheckPath = "/"
+healthcheckTimeout = 30
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
+
+# ── Service-specific env vars set in Railway dashboard ────────────────────────
+# API_UPSTREAM   http://api.railway.internal:8000
