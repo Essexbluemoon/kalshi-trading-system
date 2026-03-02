@@ -1,7 +1,11 @@
 """
 config.py
 Loads environment variables from .env and exposes typed settings.
-Implemented in Phase 3.
+
+Authentication note:
+  Kalshi's API uses RSA key-pair auth (as of 2024).
+  KALSHI_API_KEY_ID    — the key ID shown in the Kalshi dashboard
+  KALSHI_PRIVATE_KEY_PATH — path to the PEM file downloaded from Kalshi
 """
 from __future__ import annotations
 
@@ -18,19 +22,19 @@ load_dotenv(_ENV_PATH)
 
 @dataclass
 class Settings:
-    kalshi_api_key: str
-    kalshi_api_secret: str
+    kalshi_api_key_id: str
+    kalshi_private_key_path: str
     kalshi_env: str          # "prod" | "demo"
     database_url: str
     poll_interval_seconds: int
-    api_key: str             # internal API key for service-to-API calls
+    api_key: str             # internal Bearer token for the FastAPI service
 
 
 def get_settings() -> Settings:
     """Return validated settings from environment variables."""
     return Settings(
-        kalshi_api_key=_require("KALSHI_API_KEY"),
-        kalshi_api_secret=_require("KALSHI_API_SECRET"),
+        kalshi_api_key_id=_require("KALSHI_API_KEY_ID"),
+        kalshi_private_key_path=_require("KALSHI_PRIVATE_KEY_PATH"),
         kalshi_env=os.getenv("KALSHI_ENV", "prod"),
         database_url=_require("DATABASE_URL"),
         poll_interval_seconds=int(os.getenv("POLL_INTERVAL_SECONDS", "300")),
