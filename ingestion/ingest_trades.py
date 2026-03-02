@@ -132,6 +132,7 @@ def run_ingestion_cycle(db_session, kalshi_client) -> dict:
 
     # ── 5. Resolve markets + settle positions ─────────────────────────────────
     fetch_and_apply_resolutions(db_session, kalshi_client)
+    db_session.flush()  # persist resolution status before querying
 
     resolved_markets = db_session.execute(
         select(models.Market).where(

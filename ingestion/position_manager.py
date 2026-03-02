@@ -144,7 +144,12 @@ def rebuild_positions(db_session) -> int:
             total_cost = calc_yes_cost(net_contracts, int(avg_price))
 
         total_fees = sum(Decimal(str(t.fee_usd or 0)) for t in trades)
-        opened_at  = min((t.filled_at for t in buy_trades if t.filled_at), default=None)
+        # Normalise to UTC-aware before min() — SQLite reads datetimes back as naive
+        def _to_utc(dt):
+            if dt is None:
+                return None
+            return dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
+        opened_at  = min((_to_utc(t.filled_at) for t in buy_trades if t.filled_at), default=None)
 
         pos = models.Position(
             market_ticker=ticker,
