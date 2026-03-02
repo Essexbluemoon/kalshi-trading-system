@@ -35,7 +35,9 @@ services:
       db:
         condition: service_healthy
     volumes:
-      - ./api:/app          # hot reload in dev
+      - ./api:/app                    # hot reload in dev
+      - ./ingestion:/app/ingestion:ro # reconcile + position_manager shared logic
+      - ./benchmarks:/benchmarks:ro   # for /benchmarks/reload endpoint
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
   # ── React frontend ──────────────────────────────────────────────────────────
