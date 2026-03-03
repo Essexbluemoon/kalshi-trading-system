@@ -6,4 +6,5 @@ COPY api/        ./api/
 COPY ingestion/  ./ingestion/
 COPY scripts/    ./scripts/
 COPY benchmarks/ ./benchmarks/
-CMD ["sh", "-c", "cd /app/ingestion && python /app/scripts/migrate.py && exec python run.py"]
+ENV PYTHONPATH=/app/api:/app/ingestion
+CMD ["sh", "-c", "python /app/scripts/migrate.py && exec python /app/ingestion/run.py"]
