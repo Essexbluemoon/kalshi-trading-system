@@ -19,9 +19,9 @@ restartPolicyMaxRetries = 3
 # CORS_ORIGINS          set to your Railway-generated frontend URL
 
 # ── Ingestion worker — overrides the default [deploy] section above ───────────
-# "ingestion" must match the service name shown in the Railway UI exactly.
+# Service name matches the Railway UI name "accomplished-victory".
 # healthcheckPath = "" explicitly disables the healthcheck for this service.
-[services.ingestion.deploy]
+[services.accomplished-victory.deploy]
 healthcheckPath = ""
 startCommand = "sh -c 'cd /app/ingestion && python /app/scripts/migrate.py && exec python run.py'"
 restartPolicyType = "ON_FAILURE"
