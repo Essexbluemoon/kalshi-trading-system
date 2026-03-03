@@ -64,13 +64,20 @@ def _resolve_private_key() -> str:
     return _require("KALSHI_PRIVATE_KEY_PATH")
 
 
+def _normalise_db_url(url: str) -> str:
+    """Railway's PostgreSQL plugin injects postgres:// but SQLAlchemy 2.0+ requires postgresql://."""
+    if url.startswith("postgres://"):
+        return url.replace("postgres://", "postgresql://", 1)
+    return url
+
+
 def get_settings() -> Settings:
     """Return validated settings from environment variables."""
     return Settings(
         kalshi_api_key_id=_require("KALSHI_API_KEY_ID"),
         kalshi_private_key_path=_resolve_private_key(),
         kalshi_env=os.getenv("KALSHI_ENV", "prod"),
-        database_url=_require("DATABASE_URL"),
+        database_url=_normalise_db_url(_require("DATABASE_URL")),
         poll_interval_seconds=int(os.getenv("POLL_INTERVAL_SECONDS", "300")),
         api_key=_require("API_KEY"),
     )
