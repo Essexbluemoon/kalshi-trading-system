@@ -16,8 +16,13 @@ Usage:
 """
 from __future__ import annotations
 
+import os
 import sys
 from pathlib import Path
+
+# DEBUG — print DATABASE_URL before any imports so Railway logs show the raw value
+_db_url = os.environ.get("DATABASE_URL", "NOT SET")
+print(f"[migrate.py] DATABASE_URL={_db_url!r}", flush=True)
 
 # Allow importing from api/
 _API_DIR = Path(__file__).parent.parent / "api"
