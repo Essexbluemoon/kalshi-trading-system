@@ -120,4 +120,12 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    while True:
+        try:
+            main()
+            break  # --once completed normally; exit cleanly
+        except SystemExit:
+            raise  # honour explicit sys.exit() calls (e.g. argparse --help)
+        except BaseException:
+            logger.exception("Fatal error at top level — restarting in 60s")
+            time.sleep(60)
