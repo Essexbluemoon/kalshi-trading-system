@@ -17,8 +17,12 @@ restartPolicyMaxRetries = 3
 # DATABASE_URL          injected automatically by Railway PostgreSQL plugin
 # API_KEY               set manually in Railway Variables
 # CORS_ORIGINS          set to your Railway-generated frontend URL
-#
-# NOTE: This railway.toml applies to both the API and Ingestion services
-# (both use root directory "/"). For the Ingestion service, clear the
-# Health Check Path in Railway UI (Settings → Deploy → Health Check Path)
-# since it is a background worker daemon, not an HTTP server.
+
+# ── Ingestion worker — overrides the default [deploy] section above ───────────
+# "ingestion" must match the service name shown in the Railway UI exactly.
+# healthcheckPath = "" explicitly disables the healthcheck for this service.
+[services.ingestion.deploy]
+healthcheckPath = ""
+startCommand = "sh -c 'cd /app/ingestion && python /app/scripts/migrate.py && exec python run.py'"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
