@@ -17,3 +17,8 @@ restartPolicyMaxRetries = 3
 # DATABASE_URL          injected automatically by Railway PostgreSQL plugin
 # API_KEY               set manually in Railway Variables
 # CORS_ORIGINS          set to your Railway-generated frontend URL
+#
+# NOTE: This railway.toml applies to both the API and Ingestion services
+# (both use root directory "/"). For the Ingestion service, clear the
+# Health Check Path in Railway UI (Settings → Deploy → Health Check Path)
+# since it is a background worker daemon, not an HTTP server.
