@@ -72,12 +72,12 @@ def main() -> None:
 
     settings = get_settings()
 
-    with KalshiClient(
-        api_key_id=settings.kalshi_api_key_id,
-        private_key_path=settings.kalshi_private_key_path,
-        env=settings.kalshi_env,
-    ) as client:
-        if args.once:
+    if args.once:
+        with KalshiClient(
+            api_key_id=settings.kalshi_api_key_id,
+            private_key_path=settings.kalshi_private_key_path,
+            env=settings.kalshi_env,
+        ) as client:
             logger.info("Running single ingestion cycle...")
             db = SessionLocal()
             try:
@@ -85,26 +85,38 @@ def main() -> None:
                 logger.info("Done: %s", stats)
             finally:
                 db.close()
-        else:
-            logger.info(
-                "Starting ingestion daemon (interval=%ds)...",
-                settings.poll_interval_seconds,
-            )
-            while True:
-                db = SessionLocal()
-                try:
-                    stats = run_ingestion_cycle(db, client)
-                    logger.info("Cycle complete: %s", stats)
-                except Exception:
-                    logger.exception("Ingestion cycle failed")
-                    try:
-                        db.rollback()
-                    except Exception:
-                        pass
-                finally:
-                    db.close()
+        return
 
-                time.sleep(settings.poll_interval_seconds)
+    # ── Daemon mode — outer loop ensures the process never exits normally ──────
+    logger.info(
+        "Starting ingestion daemon (interval=%ds)...",
+        settings.poll_interval_seconds,
+    )
+    while True:
+        try:
+            with KalshiClient(
+                api_key_id=settings.kalshi_api_key_id,
+                private_key_path=settings.kalshi_private_key_path,
+                env=settings.kalshi_env,
+            ) as client:
+                while True:
+                    db = SessionLocal()
+                    try:
+                        stats = run_ingestion_cycle(db, client)
+                        logger.info("Cycle complete: %s", stats)
+                    except Exception:
+                        logger.exception("Ingestion cycle failed")
+                        try:
+                            db.rollback()
+                        except Exception:
+                            pass
+                    finally:
+                        db.close()
+
+                    time.sleep(settings.poll_interval_seconds)
+        except Exception:
+            logger.exception("Daemon error — reconnecting in 60s")
+            time.sleep(60)
 
 
 if __name__ == "__main__":
