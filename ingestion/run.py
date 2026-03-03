@@ -11,8 +11,11 @@ from __future__ import annotations
 
 import argparse
 import logging
+import os
 import sys
+import threading
 import time
+from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 
 # Ensure api/ is importable (needed for models + database)
@@ -26,6 +29,31 @@ logging.basicConfig(
 logger = logging.getLogger("ingestion")
 
 
+class _HealthHandler(BaseHTTPRequestHandler):
+    """Minimal HTTP handler — returns 200 OK for GET /health only."""
+
+    def do_GET(self) -> None:
+        if self.path == "/health":
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(b"ok")
+        else:
+            self.send_response(404)
+            self.end_headers()
+
+    def log_message(self, format: str, *args: object) -> None:
+        pass  # suppress per-request access logs
+
+
+def _start_health_server() -> None:
+    """Start a lightweight HTTP health server in a background daemon thread."""
+    port = int(os.getenv("PORT", "8000"))
+    server = HTTPServer(("0.0.0.0", port), _HealthHandler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    logger.info("Health server listening on port %d", port)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Kalshi ingestion service")
     parser.add_argument(
@@ -34,6 +62,8 @@ def main() -> None:
         help="Run a single ingestion cycle then exit (e.g. for cron)",
     )
     args = parser.parse_args()
+
+    _start_health_server()
 
     from config import get_settings
     from database import SessionLocal
