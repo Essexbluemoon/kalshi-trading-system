@@ -5,24 +5,34 @@
 builder = "DOCKERFILE"
 dockerfilePath = "Dockerfile"
 
-# ── API service (primary web service) ─────────────────────────────────────────
+# ── Shared deploy defaults (all services using this file) ─────────────────────
 [deploy]
-startCommand = "sh -c 'cd /app/api && python /app/scripts/migrate.py && python /app/scripts/import_benchmarks.py /app/benchmarks && exec uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}'"
-healthcheckPath = "/health"
-healthcheckTimeout = 30
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 3
 
-# ── Service-specific overrides set in Railway dashboard ───────────────────────
-# DATABASE_URL          injected automatically by Railway PostgreSQL plugin
-# API_KEY               set manually in Railway Variables
-# CORS_ORIGINS          set to your Railway-generated frontend URL
+# ── API service ────────────────────────────────────────────────────────────────
+# healthcheckPath is set here and NOT in [deploy] so it does not bleed into
+# the ingestion service.  Replace "api-service-name" with the Railway UI name
+# for the API service once known, then remove the Railway UI override.
+#
+# For now, set healthcheckPath = "/health" for the API service in Railway UI:
+#   API service → Settings → Deploy → Health Check Path → /health
+#
+# [services.api-service-name.deploy]
+# startCommand = "sh -c 'cd /app/api && python /app/scripts/migrate.py && python /app/scripts/import_benchmarks.py /app/benchmarks && exec uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}'"
+# healthcheckPath = "/health"
+# healthcheckTimeout = 30
+# restartPolicyType = "ON_FAILURE"
+# restartPolicyMaxRetries = 3
 
-# ── Ingestion worker — overrides the default [deploy] section above ───────────
-# Service name matches the Railway UI name "accomplished-victory".
-# healthcheckPath = "" explicitly disables the healthcheck for this service.
+# ── Ingestion worker (accomplished-victory) ────────────────────────────────────
+# No healthcheckPath — Railway will monitor process liveness only.
 [services.accomplished-victory.deploy]
-healthcheckPath = ""
 startCommand = "sh -c 'cd /app/ingestion && python /app/scripts/migrate.py && exec python run.py'"
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 3
+
+# ── Service-specific env vars set in Railway dashboard ────────────────────────
+# API:       DATABASE_URL (PostgreSQL plugin), API_KEY, CORS_ORIGINS
+# Ingestion: DATABASE_URL, KALSHI_API_KEY_ID, KALSHI_PRIVATE_KEY, KALSHI_ENV,
+#            POLL_INTERVAL_SECONDS, API_KEY
