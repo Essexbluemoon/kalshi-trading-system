@@ -28,7 +28,7 @@ restartPolicyMaxRetries = 3
 # ── Ingestion worker (accomplished-victory) ────────────────────────────────────
 # No healthcheckPath — Railway will monitor process liveness only.
 [services.accomplished-victory.deploy]
-startCommand = "sh -c 'cd /app/ingestion && python /app/scripts/migrate.py && exec python run.py'"
+startCommand = "sh -c 'python /app/scripts/migrate.py && exec python /app/ingestion/run.py'"
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 3
 
