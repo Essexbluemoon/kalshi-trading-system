@@ -3,7 +3,6 @@
 
 [build]
 builder = "DOCKERFILE"
-dockerfilePath = "Dockerfile"
 
 # ── Shared deploy defaults (all services using this file) ─────────────────────
 [deploy]
