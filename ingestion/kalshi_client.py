@@ -85,7 +85,7 @@ class KalshiClient:
         if not tickers:
             return []
         markets = self._client.get_markets(tickers=tickers, limit=200, fetch_all=True)
-        return [m.model.model_dump() for m in markets]
+        return [m.model_dump() for m in markets]
 
     # ── Settlements ────────────────────────────────────────────────────────────
 
