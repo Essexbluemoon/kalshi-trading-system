@@ -49,6 +49,10 @@ def _resolve_private_key() -> str:
     if pem_content:
         # Normalise escaped newlines (e.g. Railway stores multi-line vars with \n)
         pem_content = pem_content.replace("\\n", "\n")
+        # Ensure the PEM content has proper begin/end markers on their own lines
+        pem_content = pem_content.strip()
+        if not pem_content.endswith("\n"):
+            pem_content += "\n"
         tmp = tempfile.NamedTemporaryFile(
             mode="w",
             suffix=".pem",
@@ -58,6 +62,13 @@ def _resolve_private_key() -> str:
         tmp.write(pem_content)
         tmp.flush()
         tmp.close()
+        # Log enough to diagnose framing issues without leaking the key
+        lines = pem_content.strip().splitlines()
+        import logging
+        logging.getLogger(__name__).info(
+            "Wrote PEM temp file: %s (%d lines, first=%r, last=%r)",
+            tmp.name, len(lines), lines[0] if lines else "", lines[-1] if lines else "",
+        )
         return tmp.name
 
     # Fallback: explicit file path (local dev)
