@@ -10,7 +10,7 @@ from __future__ import annotations
 from decimal import Decimal
 
 from fastapi import APIRouter, Depends
-from sqlalchemy import select, func
+from sqlalchemy import Integer, cast, select, func
 from sqlalchemy.orm import Session
 
 import models
@@ -48,7 +48,7 @@ def performance_summary(db: Session = Depends(get_db)):
     ).scalar() or 0
 
     total_wins = db.execute(
-        select(func.sum(models.PositionHistory.won))
+        select(func.sum(cast(models.PositionHistory.won, Integer)))
     ).scalar() or 0
 
     win_rate = (
