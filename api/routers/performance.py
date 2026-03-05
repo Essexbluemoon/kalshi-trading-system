@@ -90,7 +90,7 @@ def performance_by_category(db: Session = Depends(get_db)):
             models.Benchmark.category,
             models.Benchmark.subcategory,
             func.count(models.PositionHistory.id).label("trades"),
-            func.sum(models.PositionHistory.won).label("wins"),
+            func.sum(cast(models.PositionHistory.won, Integer)).label("wins"),
             func.sum(models.PositionHistory.net_pnl_usd).label("total_net_pnl"),
             func.sum(models.PositionHistory.net_contracts).label("total_contracts"),
             models.Benchmark.expected_win_rate,

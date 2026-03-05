@@ -9,7 +9,7 @@ from __future__ import annotations
 from decimal import Decimal
 
 from fastapi import APIRouter, Depends
-from sqlalchemy import select, func
+from sqlalchemy import Integer, cast, select, func
 from sqlalchemy.orm import Session
 
 import models
@@ -48,7 +48,7 @@ def list_categories(db: Session = Depends(get_db)):
         select(
             models.Benchmark.category,
             func.count(models.PositionHistory.id).label("trades"),
-            func.sum(models.PositionHistory.won).label("wins"),
+            func.sum(cast(models.PositionHistory.won, Integer)).label("wins"),
             func.sum(models.PositionHistory.net_pnl_usd).label("net_pnl"),
         )
         .join(models.Market, models.PositionHistory.market_ticker == models.Market.ticker)
