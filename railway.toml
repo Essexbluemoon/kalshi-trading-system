@@ -27,6 +27,9 @@ restartPolicyMaxRetries = 3
 
 # ── Ingestion worker (accomplished-victory) ────────────────────────────────────
 # No healthcheckPath — Railway will monitor process liveness only.
+[services.accomplished-victory.build]
+dockerfilePath = "Dockerfile.ingestion"
+
 [services.accomplished-victory.deploy]
 startCommand = "sh -c 'python /app/scripts/migrate.py && exec python /app/ingestion/run.py'"
 restartPolicyType = "ON_FAILURE"
