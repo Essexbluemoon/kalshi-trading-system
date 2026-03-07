@@ -125,7 +125,7 @@ export default function OpenPositions() {
                       {fmtNumber(pos.net_contracts)}
                     </td>
                     <td className="px-3 py-2 text-right text-gray-300">
-                      {fmtCents(pos.avg_price_cents)}
+                      {fmtCents(pos.side === "no" ? 100 - pos.avg_price_cents : pos.avg_price_cents)}
                     </td>
                     <td className="px-3 py-2 text-right text-gray-300">
                       {fmtUsd(pos.total_cost_usd)}
