@@ -119,11 +119,32 @@ class KalshiClient:
         """
         data = self._client.get(f"/markets/{ticker}/orderbook")
         ob = data.get("orderbook", data)
+
+        # Orderbook returns arrays of [price, qty] pairs, not scalar fields.
+        # yes array = bids to buy YES. Best yes_bid = highest price in yes array.
+        # no array  = bids to buy NO.  Best no_bid  = highest price in no array.
+        # yes_ask (implied) = 100 - best no_bid (someone willing to sell YES at that price)
+        # no_ask  (implied) = 100 - best yes_bid
+
+        def best_price(arr):
+            """Return the highest price from a [[price, qty], ...] array, or None."""
+            if not arr:
+                return None
+            return max(row[0] for row in arr)
+
+        yes_arr = ob.get("yes") or []
+        no_arr  = ob.get("no")  or []
+
+        yes_bid = best_price(yes_arr)
+        no_bid  = best_price(no_arr)
+        yes_ask = (100 - no_bid)  if no_bid  is not None else None
+        no_ask  = (100 - yes_bid) if yes_bid is not None else None
+
         return {
-            "yes_bid": ob.get("yes_bid"),
-            "yes_ask": ob.get("yes_ask"),
-            "no_bid":  ob.get("no_bid"),
-            "no_ask":  ob.get("no_ask"),
+            "yes_bid": yes_bid,
+            "yes_ask": yes_ask,
+            "no_bid":  no_bid,
+            "no_ask":  no_ask,
         }
 
 
