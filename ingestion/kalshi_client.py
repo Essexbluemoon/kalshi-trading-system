@@ -114,14 +114,16 @@ class KalshiClient:
         """
         Return current best-bid/ask for a market.
         Keys: yes_bid, yes_ask, no_bid, no_ask  (int cents; any may be None)
+
+        Uses the REST API directly to avoid pykalshi model wrapping issues.
         """
-        market = self._client.get_market(ticker)
-        m = market.model if hasattr(market, "model") else market
+        data = self._client.get(f"/markets/{ticker}/orderbook")
+        ob = data.get("orderbook", data)
         return {
-            "yes_bid": getattr(m, "yes_bid", None),
-            "yes_ask": getattr(m, "yes_ask", None),
-            "no_bid":  getattr(m, "no_bid", None),
-            "no_ask":  getattr(m, "no_ask", None),
+            "yes_bid": ob.get("yes_bid"),
+            "yes_ask": ob.get("yes_ask"),
+            "no_bid":  ob.get("no_bid"),
+            "no_ask":  ob.get("no_ask"),
         }
 
 
