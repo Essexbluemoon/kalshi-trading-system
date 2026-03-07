@@ -45,6 +45,27 @@ class _HealthHandler(BaseHTTPRequestHandler):
         pass  # suppress per-request access logs
 
 
+def _start_keepalive_pinger() -> None:
+    """Ping the API /health endpoint every 4 minutes to keep it warm."""
+    import urllib.request
+    api_url = os.getenv("API_URL", "").rstrip("/")
+    if not api_url:
+        logger.info("API_URL not set — skipping keep-alive pinger")
+        return
+    health_url = f"{api_url}/health"
+    def _ping_loop():
+        while True:
+            time.sleep(240)  # 4 minutes
+            try:
+                with urllib.request.urlopen(health_url, timeout=10) as resp:
+                    logger.debug("Keep-alive ping %s → %d", health_url, resp.status)
+            except Exception:
+                logger.warning("Keep-alive ping to %s failed", health_url, exc_info=True)
+    thread = threading.Thread(target=_ping_loop, daemon=True)
+    thread.start()
+    logger.info("Keep-alive pinger started → %s every 4m", health_url)
+
+
 def _start_health_server() -> None:
     """Start a lightweight HTTP health server in a background daemon thread."""
     port = int(os.getenv("PORT", "8000"))
@@ -64,6 +85,7 @@ def main() -> None:
     args = parser.parse_args()
 
     _start_health_server()
+    _start_keepalive_pinger()
 
     from config import get_settings
     from database import SessionLocal
