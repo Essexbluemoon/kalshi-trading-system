@@ -128,7 +128,7 @@ def run_ingestion_cycle(db_session, kalshi_client) -> dict:
     db_session.flush()
 
     # ── 4. Rebuild open positions ──────────────────────────────────────────────
-    stats["positions_rebuilt"] = rebuild_positions(db_session)
+    stats["positions_rebuilt"] = rebuild_positions(db_session, kalshi_client)
 
     # ── 5. Resolve markets + settle positions ─────────────────────────────────
     fetch_and_apply_resolutions(db_session, kalshi_client)

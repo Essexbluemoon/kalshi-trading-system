@@ -76,7 +76,7 @@ def calc_gross_pnl(
 
 # ── Position aggregation ───────────────────────────────────────────────────────
 
-def rebuild_positions(db_session) -> int:
+def rebuild_positions(db_session, kalshi_client=None) -> int:
     """
     Recompute the positions table from the trades table.
 
@@ -151,6 +151,23 @@ def rebuild_positions(db_session) -> int:
             return dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
         opened_at  = min((_to_utc(t.filled_at) for t in buy_trades if t.filled_at), default=None)
 
+        # Fetch live price for unrealized P&L
+        current_price_cents = None
+        unrealized_pnl_usd = None
+        if kalshi_client is not None:
+            try:
+                ob = kalshi_client.get_orderbook(ticker)
+                yes_bid = ob.get("yes_bid")
+                if yes_bid is not None:
+                    if side == "yes":
+                        current_price_cents = Decimal(yes_bid)
+                        unrealized_pnl_usd = (current_price_cents - avg_price) * net_contracts / 100
+                    else:  # no
+                        current_price_cents = Decimal(100 - yes_bid)
+                        unrealized_pnl_usd = (current_price_cents - (100 - avg_price)) * net_contracts / 100
+            except Exception:
+                logger.exception("Failed to fetch orderbook for %s", ticker)
+
         pos = models.Position(
             market_ticker=ticker,
             side=side,
@@ -158,8 +175,8 @@ def rebuild_positions(db_session) -> int:
             avg_price_cents=round(avg_price, 4),
             total_cost_usd=total_cost,
             total_fees_usd=total_fees,
-            current_price_cents=None,
-            unrealized_pnl_usd=None,
+            current_price_cents=round(current_price_cents, 4) if current_price_cents is not None else None,
+            unrealized_pnl_usd=round(unrealized_pnl_usd, 4) if unrealized_pnl_usd is not None else None,
             opened_at=opened_at,
         )
         db_session.add(pos)
