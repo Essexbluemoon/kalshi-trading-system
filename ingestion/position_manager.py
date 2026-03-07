@@ -158,13 +158,17 @@ def rebuild_positions(db_session, kalshi_client=None) -> int:
             try:
                 ob = kalshi_client.get_orderbook(ticker)
                 yes_bid = ob.get("yes_bid")
-                if yes_bid is not None:
-                    if side == "yes":
-                        current_price_cents = Decimal(yes_bid)
-                        unrealized_pnl_usd = (current_price_cents - avg_price) * net_contracts / 100
-                    else:  # no
-                        current_price_cents = Decimal(100 - yes_bid)
-                        unrealized_pnl_usd = (current_price_cents - (100 - avg_price)) * net_contracts / 100
+                yes_ask = ob.get("yes_ask")
+
+                if side == "yes" and yes_bid is not None:
+                    current_price_cents = Decimal(yes_bid)
+                    unrealized_pnl_usd = (current_price_cents - avg_price) * net_contracts / 100
+                elif side == "no" and yes_ask is not None:
+                    current_price_cents = Decimal(100 - yes_ask)
+                    unrealized_pnl_usd = (current_price_cents - (100 - avg_price)) * net_contracts / 100
+                elif side == "no" and yes_bid is not None:
+                    current_price_cents = Decimal(100 - yes_bid)
+                    unrealized_pnl_usd = (current_price_cents - (100 - avg_price)) * net_contracts / 100
             except Exception:
                 logger.exception("Failed to fetch orderbook for %s", ticker)
 
