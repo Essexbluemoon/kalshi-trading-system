@@ -116,12 +116,12 @@ class KalshiClient:
         Keys: yes_bid, yes_ask, no_bid, no_ask  (int cents; any may be None)
         """
         market = self._client.get_market(ticker)
-        m = market.model
+        m = market.model if hasattr(market, "model") else market
         return {
-            "yes_bid": m.yes_bid,
-            "yes_ask": m.yes_ask,
-            "no_bid":  m.no_bid,
-            "no_ask":  m.no_ask,
+            "yes_bid": getattr(m, "yes_bid", None),
+            "yes_ask": getattr(m, "yes_ask", None),
+            "no_bid":  getattr(m, "no_bid", None),
+            "no_ask":  getattr(m, "no_ask", None),
         }
 
 
