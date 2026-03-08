@@ -1,0 +1,2 @@
+event_prefix,trades,win_rate,ev_per_ctr,total_pnl,sharpe,median_days,p90_days,low_sample,earliest_trade,latest_trade
+KXSBAD,17,0.8235,0.12780,709.39,,38.0,38.0,False,2026-01-01,2026-02-08
