@@ -198,8 +198,29 @@ def _parse_kx_eco(df: pd.DataFrame) -> Iterator[dict]:
 
 # ── Source registry ─────────────────────────────────────────────────────────────
 # (filename, parser)  — order matters for upsert priority (later files win on conflict)
+def _parse_superbowl_ads(df: pd.DataFrame) -> Iterator[dict]:
+    """superbowl_ads.csv — Information Asymmetry / Super Bowl Ads."""
+    for _, row in df.iterrows():
+        yield {
+            "event_prefix":        row["event_prefix"],
+            "category":            "Information Asymmetry",
+            "subcategory":         "Super Bowl Ads",
+            "expected_win_rate":   _safe_float(row.get("win_rate")),
+            "expected_ev_per_ctr": _safe_float(row.get("ev_per_ctr")),
+            "expected_sharpe":     _safe_float(row.get("sharpe")),
+            "sample_trades":       _safe_int(row.get("trades")),
+            "price_bucket":        None,
+            "timing_filter":       None,
+            "notes":               (
+                f"total_pnl={row.get('total_pnl')}, "
+                f"earliest={row.get('earliest_trade')}, latest={row.get('latest_trade')}"
+            ),
+        }
+
+
 SOURCES = [
     ("kx_vs_nonkx_dates.csv",    _parse_kx_eco),
+    ("superbowl_ads.csv",        _parse_superbowl_ads),
     ("sp500_addition_markets.csv",_parse_sp500),
     ("other_sports_drill.csv",   _parse_other_sports),
     ("world_events_drill.csv",   _parse_world_events),
